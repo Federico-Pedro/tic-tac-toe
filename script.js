@@ -51,46 +51,75 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 	let activePlayer = players[0];
     const setActivePlayer = (index) => activePlayer = players[index];
     const getActivePlayer = () => activePlayer;
-
+	
     const switchActivePlayer = () => (activePlayer === players[0]) ? activePlayer = players[1] : activePlayer = players[0];	
-		
+
+	console.log(`Player One: ${players[0].name} vs. Player Two: ${players[1].name}`);	
+	console.log(`Its ${activePlayer.name}'s turn `);
+	printBoard(getBoard());
+
+	///////play////////
 	 const play = (cell) => {
+			console.clear();
             const box = board.getBoard()[cell];
             if(box.getValue() === "[]") {
                 board.getBoard()[cell].addToken(activePlayer.token)
             }else {
-                return;
+				console.log('That cell is not available');
+				printBoard(getBoard());  
+				
+                play(prompt(`${activePlayer.name}, what's your cell choice?`));
             }
-            switchActivePlayer();
+
 			
-            
+            switchActivePlayer();
+			printBoard(getBoard());
+			
+			
+			const availableCell = getBoard().filter(box => box.getValue() === "[]").length;
+			console.log(availableCell);
+			
+	
+			if(availableCell === 0){
+				console.log("There are not available cells");
+			} else {
+				console.log("There are still spaces");
+				
+			}
+		            
         };
+/////////end play /////////
+
+
 		
-		
-		play(prompt("Which cell?"));
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		let i = 0;
+		while(i<9){
+			play(prompt(`${activePlayer.name}, what's your cell choice?`));
+		i++;
+		};
 		
 		
 		
 		
-	console.log(`Player One: ${players[0].name} vs. Player Two: ${players[1].name}`);	
-	printBoard(getBoard());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		function printBoard (board){
+	
+			console.log(board[0].getValue(), board[1].getValue(), board[2].getValue());
+			console.log(board[3].getValue(), board[4].getValue(), board[5].getValue());
+			console.log(board[6].getValue(), board[7].getValue(), board[8].getValue());
+		};	
+	
 	return activePlayer;	
 })();
 
 
-function printBoard (board){
-	
-	console.log(board[0].getValue(), board[1].getValue(), board[2].getValue());
-	console.log(board[3].getValue(), board[4].getValue(), board[5].getValue());
-	console.log(board[6].getValue(), board[7].getValue(), board[8].getValue());
-};
