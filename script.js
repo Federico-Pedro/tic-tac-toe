@@ -1,12 +1,11 @@
-console.log("Hi,Im working");
+console.log("Welcome to Tic-Tac-Toe");
 
-//Crea la grilla con los valores que le pasa la función Box()
 const Gameboard = (function(){
 	let board = [];
 	
 	const createBoard = () => {
 		for(let i=0; i<9; i++){
-			board[i] = addToken();
+			board[i] = cell();
 			
 		}
 	}
@@ -23,17 +22,75 @@ const Gameboard = (function(){
 })();
 
 
-function addToken() {
-	const token = prompt("Whats your token?");
-	return token;
+function cell() {
+	let value = "[]";
+
+    const addToken = (token) => value = token;
+
+    const getValue = () => value;
+
+    return {addToken, getValue};
 };
 
 
-const PrintBoard = (function(){
+const GameController = (function(playerOne = prompt("Enter player One`s name"), playerTwo = prompt("Enter player Two`s name")){
+	
 	const board = Gameboard;
 	const createBoard = board.createBoard();
-	const printBoard = board.getBoard();
-	console.log(printBoard[0], printBoard[1], printBoard[2]);
-	console.log(printBoard[3], printBoard[4], printBoard[5]);
-	console.log(printBoard[6], printBoard[7], printBoard[8]);
+	const getBoard = () => board.getBoard();
+	const players = [
+            {
+                name: playerOne,
+                token: 'X'
+            },
+            {
+                name: playerTwo,
+                token: 'O'
+            }
+        ];
+	let activePlayer = players[0];
+    const setActivePlayer = (index) => activePlayer = players[index];
+    const getActivePlayer = () => activePlayer;
+
+    const switchActivePlayer = () => (activePlayer === players[0]) ? activePlayer = players[1] : activePlayer = players[0];	
+		
+	 const play = (cell) => {
+            const box = board.getBoard()[cell];
+            if(box.getValue() === "[]") {
+                board.getBoard()[cell].addToken(activePlayer.token)
+            }else {
+                return;
+            }
+            switchActivePlayer();
+			
+            
+        };
+		
+		
+		play(prompt("Which cell?"));
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	console.log(`Player One: ${players[0].name} vs. Player Two: ${players[1].name}`);	
+	printBoard(getBoard());
+	return activePlayer;	
 })();
+
+
+function printBoard (board){
+	
+	console.log(board[0].getValue(), board[1].getValue(), board[2].getValue());
+	console.log(board[3].getValue(), board[4].getValue(), board[5].getValue());
+	console.log(board[6].getValue(), board[7].getValue(), board[8].getValue());
+};
