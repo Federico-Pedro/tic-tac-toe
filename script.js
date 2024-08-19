@@ -6,11 +6,9 @@ const Gameboard = (function(){
 	const createBoard = () => {
 		for(let i=0; i<9; i++){
 			board[i] = cell();
-			
 		}
 	}
 	
-	//createBoard();
 	const getBoard = () => board;
 	
 	const clearBoard = () => {
@@ -24,11 +22,8 @@ const Gameboard = (function(){
 
 function cell() {
 	let value = "[]";
-
-    const addToken = (token) => value = token;
-
+	const addToken = (token) => value = token;
     const getValue = () => value;
-
     return {addToken, getValue};
 };
 
@@ -67,36 +62,68 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
             }else {
 				console.log('That cell is not available');
 				printBoard(getBoard());  
-				
-                play(prompt(`${activePlayer.name}, what's your cell choice?`));
+				play(prompt(`${activePlayer.name}, what's your cell choice?`));
             }
 
-			
+			if((!isAvailableBoxes()) && !isWinner()){
+				console.log("That is a draw");
+			}
+
+			isWinner();
             switchActivePlayer();
 			printBoard(getBoard());
 			
+					
 			
-			const availableCell = getBoard().filter(box => box.getValue() === "[]").length;
-			console.log(availableCell);
-			
-	
-			if(availableCell === 0){
-				console.log("There are not available cells");
-			} else {
-				console.log("There are still spaces");
-				
-			}
 		            
         };
 /////////end play /////////
 
+	const isAvailableBoxes = () => {
+	const spaces = getBoard().filter(box => box.getValue() === "[]").length;
+	if(spaces > 0) return true;
+	};
+		// aca abajo tenès que hacer una funcion que recorra el array y vea si hay un ganador//////
+
+	const isWinner = () => {
+		const board = getBoard();
+		const token = activePlayer.token;
+		
+		if ((board[0].getValue() === token) && (board[1].getValue() === token) && (board[2].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[3].getValue() === token) && (board[4].getValue() === token) && (board[5].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[6].getValue() === token) && (board[7].getValue() === token) && (board[8].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[0].getValue() === token) && (board[3].getValue() === token) && (board[6].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[1].getValue() === token) && (board[4].getValue() === token) && (board[7].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[2].getValue() === token) && (board[5].getValue() === token) && (board[8].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[0].getValue() === token) && (board[4].getValue() === token) && (board[8].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		} else if ((board[6].getValue() === token) && (board[4].getValue() === token) && (board[2].getValue() === token)){
+			console.log(`${activePlayer.name} is the winner!!!!`);
+			
+		}
+	};
+		
+	
+
+
 
 		
-
-		let i = 0;
-		while(i<9){
+		while(isAvailableBoxes){
 			play(prompt(`${activePlayer.name}, what's your cell choice?`));
-		i++;
+		
 		};
 		
 		
