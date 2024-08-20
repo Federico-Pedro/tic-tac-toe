@@ -43,6 +43,10 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
                 token: 'O'
             }
         ];
+		
+	const setPlayerName = (name, index) => players[index].name = name;
+    const getPlayerNames = () => [players[0].name, players[1].name];	
+	
 	let activePlayer = players[0];
     const setActivePlayer = (index) => activePlayer = players[index];
     const getActivePlayer = () => activePlayer;
@@ -51,11 +55,21 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 
 	let playerOneScore = 0;
 	let playerTwoScore = 0;
-
-	const setPalyerScore = (x, o = 0) =>{
+	
+	const setScore = (x, o) =>{
 		playerOneScore += x;
 		playerTwoScore += o;
-	}
+	};
+	
+	const resetScore = () => {
+        playerOneScore = 0;
+        playerTwoScore = 0;
+        };
+		
+	const getScore = () => ({
+		x: playerOneScore,
+		o: playerTwoScore
+	});	
 
 	console.log(`Player One: ${players[0].name} vs. Player Two: ${players[1].name}`);	
 	console.log(`Its ${activePlayer.name}'s turn `);
@@ -64,101 +78,110 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 	///////play////////
 	 const play = (cell) => {
 			console.clear();
-            const box = board.getBoard()[cell];
+			const box = board.getBoard()[cell];
             if(box.getValue() === "[]") {
                 board.getBoard()[cell].addToken(activePlayer.token)
             }else {
-				
 				console.log('That cell is not available');
 				play(prompt(`${activePlayer.name}, what's your cell choice?`));
             }
-
-			if((!isAvailableBoxes()) && !isWinner()){
-				console.log("That is a draw");
-			}
-
-			isWinner();
-			console.log(isWinner());
+						
+			const available = isAvailableBoxes();
 			const winner = isWinner();
-			console.log(winner);
+			
+			
+			if((!available) && !winner){
+				result = 'It´s a draw!!!'
+				gameState = 'Over';
+				console.log(result);
+			};
+
+		
+			
+			if(winner){
+				 (activePlayer.token === 'X') ? setScore(1, 0) : setScore(0, 1);
+				 win = true;
+				 gameState = 'Over';
+				 result = `${activePlayer.name} wins!!`
+				 console.log(result);
+				 console.log(`${players[0].name} score is: ${playerOneScore}`);
+				 console.log(`${players[1].name} score is: ${playerTwoScore}`);
+			};	
+			
 			switchActivePlayer();
 			printBoard(getBoard());
-			
-			const getWinner = () => winner;
-			
-		    return {getWinner};
+						
        };
 /////////end play /////////
-
+	let result = '';
+	const getResult = () => result;
+    const resetResult = () => result = '';
+	
+	const restart = () => {
+		board.clearBoard();
+		resetResult;
+		}
+		
+	const endGame = () => {
+            restart();
+            playerOneName = 'Player X';
+            playerTwoName = 'Player O';
+            resetScore();
+        };	
+		
+	let gameState = 'Start';
+	const resetState =() => gameState = 'Start';
+	const getState = () => gamestate;
+		
+	
 	const isAvailableBoxes = () => {
 	const spaces = getBoard().filter(box => box.getValue() === "[]").length;
-	if(spaces > 0) return true;
+	if(spaces > 0) {
+		return true;
+	} else {
+		return false
+	}
 	};
-		// aca abajo tenès que hacer una funcion que recorra el array y vea si hay un ganador//////
+		
 
 	const isWinner = () => {
+		let winner = false;
 		const board = getBoard();
 		const token = activePlayer.token;
-		let winner = false;
-		
 		if ((board[0].getValue() === token) && (board[1].getValue() === token) && (board[2].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[3].getValue() === token) && (board[4].getValue() === token) && (board[5].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[6].getValue() === token) && (board[7].getValue() === token) && (board[8].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[0].getValue() === token) && (board[3].getValue() === token) && (board[6].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[1].getValue() === token) && (board[4].getValue() === token) && (board[7].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[2].getValue() === token) && (board[5].getValue() === token) && (board[8].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[0].getValue() === token) && (board[4].getValue() === token) && (board[8].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		} else if ((board[6].getValue() === token) && (board[4].getValue() === token) && (board[2].getValue() === token)){
-			console.log(`${activePlayer.name} is the winner!!!!`);
 			winner = true;
-			
 		}
 		return winner;
 	};
 		
-
-
- 
-	while(isAvailableBoxes && !isWinner()){
-		play(prompt(`${activePlayer.name}, what's your cell choice?`));
-			console.log(isWinner());
-		};
- 
+	let win = false;
 		
+	function playTurn(){
+		do {
+			play(prompt(`${activePlayer.name}, what's your cell choice?`));
+			//console.log(isAvailableBoxes(), isWinner());
+		}
+		while (isAvailableBoxes() && !win);
+	};
 		
+				
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	playTurn();
+	
 		
 		
 		
@@ -169,7 +192,7 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 			console.log(board[6].getValue(), board[7].getValue(), board[8].getValue());
 		};	
 	
-	return activePlayer;	
+	return {createBoard, getBoard,setPlayerName, play, setActivePlayer, getScore, resetScore, restart, getResult, getPlayerNames, endGame, getState, resetState};
 })();
 
 
