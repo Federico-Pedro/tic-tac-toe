@@ -49,6 +49,14 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 	
     const switchActivePlayer = () => (activePlayer === players[0]) ? activePlayer = players[1] : activePlayer = players[0];	
 
+	let playerOneScore = 0;
+	let playerTwoScore = 0;
+
+	const setPalyerScore = (x, o = 0) =>{
+		playerOneScore += x;
+		playerTwoScore += o;
+	}
+
 	console.log(`Player One: ${players[0].name} vs. Player Two: ${players[1].name}`);	
 	console.log(`Its ${activePlayer.name}'s turn `);
 	printBoard(getBoard());
@@ -60,8 +68,8 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
             if(box.getValue() === "[]") {
                 board.getBoard()[cell].addToken(activePlayer.token)
             }else {
+				
 				console.log('That cell is not available');
-				printBoard(getBoard());  
 				play(prompt(`${activePlayer.name}, what's your cell choice?`));
             }
 
@@ -70,13 +78,16 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 			}
 
 			isWinner();
-            switchActivePlayer();
+			console.log(isWinner());
+			const winner = isWinner();
+			console.log(winner);
+			switchActivePlayer();
 			printBoard(getBoard());
 			
-					
+			const getWinner = () => winner;
 			
-		            
-        };
+		    return {getWinner};
+       };
 /////////end play /////////
 
 	const isAvailableBoxes = () => {
@@ -88,43 +99,55 @@ const GameController = (function(playerOne = prompt("Enter player One`s name"), 
 	const isWinner = () => {
 		const board = getBoard();
 		const token = activePlayer.token;
+		let winner = false;
 		
 		if ((board[0].getValue() === token) && (board[1].getValue() === token) && (board[2].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[3].getValue() === token) && (board[4].getValue() === token) && (board[5].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[6].getValue() === token) && (board[7].getValue() === token) && (board[8].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[0].getValue() === token) && (board[3].getValue() === token) && (board[6].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[1].getValue() === token) && (board[4].getValue() === token) && (board[7].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[2].getValue() === token) && (board[5].getValue() === token) && (board[8].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[0].getValue() === token) && (board[4].getValue() === token) && (board[8].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		} else if ((board[6].getValue() === token) && (board[4].getValue() === token) && (board[2].getValue() === token)){
 			console.log(`${activePlayer.name} is the winner!!!!`);
+			winner = true;
 			
 		}
+		return winner;
 	};
 		
-	
 
 
-
-		
-		while(isAvailableBoxes){
-			play(prompt(`${activePlayer.name}, what's your cell choice?`));
-		
+ 
+	while(isAvailableBoxes && !isWinner()){
+		play(prompt(`${activePlayer.name}, what's your cell choice?`));
+			console.log(isWinner());
 		};
+ 
+		
+		
+		
 		
 		
 		
